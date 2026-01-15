@@ -1,0 +1,549 @@
+{
+  "version": 1,
+  "tests": [
+    {
+      "id": "sample_1",
+      "text": "Customer onboarding record created by Michael Jonathan Carter on 17 February 1989.\n\nPrimary email address on file is michael.carter89@gmail.com, with a secondary contact at m.carter@fintrust.co.uk.\n\nCustomer can be reached via mobile at +44 7700 900123 or office line 020 7946 0321.\n\nResidential address verified during KYC:\nFlat 5, 221B King Street, London, SW1A 1AA, United Kingdom.\n\nCustomer logged in successfully from IP address 192.168.10.42, with a previous login recorded from 10.0.0.15.\n\nBank account details were linked during setup.  \nPrimary current account is held at Barclays Bank, with sort code 20-45-67 and account number 12345678.\n\nAn additional account was added with IBAN GB82 WEST 1234 5698 7654 32 under the name Michael J. Carter.\n\nDebit card ending in 4321 and credit card 4111 1111 1111 1111 (Visa) were used for initial funding.  \nA secondary Mastercard 5500 0000 0000 0004 expired on 08/27 was also stored.\n\nTransaction history shows payment TXN-7f93ad82a1 for £2,450.75 on 03 November 2024, followed by refund transaction TXN-REF-991283 processed two days later.\n\nInternal ledger references include ACCOUNT_ID ACC-982374, CUSTOMER_REF CUST-4419281, and session identifier SESSION-A9F3C77E.\n\nSupport ticket SUP-2024-99182 was opened by the customer to dispute a charge originating from merchant CloudSoft Ltd.\n",
+      "expected_typed": {
+        "PERSON": [
+          "Michael J. Carter",
+          "Michael Jonathan Carter"
+        ],
+        "DATE_OF_BIRTH": [
+          "17 February 1989"
+        ],
+        "DATE": [
+          "03 November 2024"
+        ],
+        "EMAIL_ADDRESS": [
+          "m.carter@fintrust.co.uk",
+          "michael.carter89@gmail.com"
+        ],
+        "UK_PHONE_NUMBER": [
+          "+44 7700 900123",
+          "020 7946 0321"
+        ],
+        "UK_ADDRESS": [
+          "Flat 5, 221B King Street, London, SW1A 1AA, United Kingdom"
+        ],
+        "IP_ADDRESS": [
+          "10.0.0.15",
+          "192.168.10.42"
+        ],
+        "UK_SORT_CODE": [
+          "20-45-67"
+        ],
+        "UK_ACCOUNT_NUMBER": [
+          "12345678"
+        ],
+        "UK_IBAN": [
+          "GB82 WEST 1234 5698 7654 32"
+        ],
+        "CREDIT_CARD_NUMBER": [
+          "4111 1111 1111 1111",
+          "5500 0000 0000 0004"
+        ],
+        "CARD_EXPIRY": [
+          "08/27"
+        ],
+        "CARD_LAST4": [
+          "4321"
+        ],
+        "TRANSACTION_ID": [
+          "TXN-7f93ad82a1",
+          "TXN-REF-991283"
+        ],
+        "ACCOUNT_ID": [
+          "ACC-982374"
+        ],
+        "CUSTOMER_REFERENCE": [
+          "CUST-4419281"
+        ],
+        "SESSION_ID": [
+          "SESSION-A9F3C77E"
+        ],
+        "SUPPORT_TICKET_NUMBER": [
+          "SUP-2024-99182"
+        ],
+        "ORG": [
+          "Barclays Bank",
+          "CloudSoft Ltd"
+        ]
+      }
+    },
+    {
+      "id": "sample_2",
+      "text": "KYC review note created by Harriet Jane Evans on 05 July 1992.\n\nPrimary email on file: harriet.evans92@example.co.uk (alt: h.evans@northshore.co.uk).\n\nCustomer contact numbers: +44 7700 900234 (mobile) and 0117 496 0182 (office).\n\nAddress confirmed during KYC:\nUnit 14, 72 Market Road, Bristol, BS1 4ST, United Kingdom\n\nRecent access observed from IP 172.20.14.8, with an earlier login from 203.0.113.27.\n\nBank details captured for payouts. Account held at NatWest Bank with sort code 11-22-33 and account number 87654321.\nInternational payments configured using IBAN GB29 NWBK 6016 1331 9268 19 under the name Harriet J. Evans.\n\nPayment cards on file: card ending in 7788, plus Visa 4242 4242 4242 4242 and Mastercard 5555 5555 5555 4444.\nCard expiry recorded as 11/28.\n\nTransaction log shows charge TXN-3b7c2d9f11 for £1,109.40 on 21 December 2025, followed by refund TXN-REF-552901 two days later.\n\nInternal references: ACCOUNT_ID ACC-551209, CUSTOMER_REF CUST-8801734, session SESSION-4C2D9E10.\nSupport ticket SUP-2025-10488 raised regarding service provider BrightCloud Services Ltd.",
+      "expected_typed": {
+        "PERSON": [
+          "Harriet J. Evans",
+          "Harriet Jane Evans"
+        ],
+        "DATE_OF_BIRTH": [
+          "05 July 1992"
+        ],
+        "DATE": [
+          "21 December 2025"
+        ],
+        "EMAIL_ADDRESS": [
+          "h.evans@northshore.co.uk",
+          "harriet.evans92@example.co.uk"
+        ],
+        "UK_PHONE_NUMBER": [
+          "+44 7700 900234",
+          "0117 496 0182"
+        ],
+        "UK_ADDRESS": [
+          "Unit 14, 72 Market Road, Bristol, BS1 4ST, United Kingdom"
+        ],
+        "IP_ADDRESS": [
+          "172.20.14.8",
+          "203.0.113.27"
+        ],
+        "UK_SORT_CODE": [
+          "11-22-33"
+        ],
+        "UK_ACCOUNT_NUMBER": [
+          "87654321"
+        ],
+        "UK_IBAN": [
+          "GB29 NWBK 6016 1331 9268 19"
+        ],
+        "CREDIT_CARD_NUMBER": [
+          "4242 4242 4242 4242",
+          "5555 5555 5555 4444"
+        ],
+        "CARD_EXPIRY": [
+          "11/28"
+        ],
+        "CARD_LAST4": [
+          "7788"
+        ],
+        "TRANSACTION_ID": [
+          "TXN-3b7c2d9f11",
+          "TXN-REF-552901"
+        ],
+        "ACCOUNT_ID": [
+          "ACC-551209"
+        ],
+        "CUSTOMER_REFERENCE": [
+          "CUST-8801734"
+        ],
+        "SESSION_ID": [
+          "SESSION-4C2D9E10"
+        ],
+        "SUPPORT_TICKET_NUMBER": [
+          "SUP-2025-10488"
+        ],
+        "ORG": [
+          "BrightCloud Services Ltd",
+          "NatWest Bank"
+        ]
+      }
+    },
+    {
+      "id": "sample_3",
+      "text": "Case note (KYC + Support) created by Aisha Patel. DOB confirmed as 12 March 1990.\n\nPrimary contact email: aisha.patel90@example.co.uk; backup: a.patel@stonebridge.co.uk.\n\nCustomer reachable on +44 7700 900987 (mobile) and 020 8123 4455 (desk).\nAlt number seen in legacy CRM: 020-8123-4455.\n\nAddress verified via proof of residence:\nApt 3B, 14 Riverside Walk, Bristol, BS14ST, United Kingdom.\n\nLogin activity: current IP 172.16.0.5; prior IP 203.0.113.27.\n\nBank details for refunds: bank Lloyds Bank, sort code 11-22-33, account number 87654321.\nIBAN used for international transfers: GB29 NWBK 6016 1331 9268 19.\n\nPayment method update: Visa 4242 4242 4242 4242 and Mastercard 5555 5555 5555 4444 stored; expiry 11/28.\nNote: customer mentioned “card ending 7788” during the call.\n\nTimeline: verification completed on 09 January 2026.\nTransaction refs: TXN-91c0a7d2e4 and TXN-REF-120045.\n\nInternal refs include ACCOUNT_ID ACC-551209, CUSTOMER_REF CUST-8801734, session SESSION-4C2D9E10, and internal id INT-UK-004291.\nSupport ticket SUP-2026-10488 raised regarding merchant BrightCloud Services Ltd.",
+      "expected_typed": {
+        "PERSON": [
+          "Aisha Patel"
+        ],
+        "DATE_OF_BIRTH": [
+          "12 March 1990"
+        ],
+        "DATE": [
+          "09 January 2026"
+        ],
+        "EMAIL_ADDRESS": [
+          "a.patel@stonebridge.co.uk",
+          "aisha.patel90@example.co.uk"
+        ],
+        "UK_PHONE_NUMBER": [
+          "+44 7700 900987",
+          "020 8123 4455",
+          "020-8123-4455"
+        ],
+        "UK_ADDRESS": [
+          "Apt 3B, 14 Riverside Walk, Bristol, BS14ST, United Kingdom"
+        ],
+        "IP_ADDRESS": [
+          "172.16.0.5",
+          "203.0.113.27"
+        ],
+        "UK_SORT_CODE": [
+          "11-22-33"
+        ],
+        "UK_ACCOUNT_NUMBER": [
+          "87654321"
+        ],
+        "UK_IBAN": [
+          "GB29 NWBK 6016 1331 9268 19"
+        ],
+        "CREDIT_CARD_NUMBER": [
+          "4242 4242 4242 4242",
+          "5555 5555 5555 4444"
+        ],
+        "CARD_EXPIRY": [
+          "11/28"
+        ],
+        "TRANSACTION_ID": [
+          "TXN-91c0a7d2e4",
+          "TXN-REF-120045"
+        ],
+        "ACCOUNT_ID": [
+          "ACC-551209"
+        ],
+        "CUSTOMER_REFERENCE": [
+          "CUST-8801734"
+        ],
+        "SESSION_ID": [
+          "SESSION-4C2D9E10"
+        ],
+        "SUPPORT_TICKET_NUMBER": [
+          "SUP-2026-10488"
+        ],
+        "INTERNAL_ID": [
+          "INT-UK-004291"
+        ],
+        "ORG": [
+          "BrightCloud Services Ltd",
+          "Lloyds Bank"
+        ]
+      }
+    },
+    {
+      "id": "sample_3",
+      "text": "Case note (KYC + Support) created by Aisha Patel. DOB confirmed as 12 March 1990.\n\nPrimary contact email: aisha.patel90@example.co.uk; backup: a.patel@stonebridge.co.uk.\n\nCustomer reachable on +44 7700 900987 (mobile) and 020 8123 4455 (desk).\nAlt number seen in legacy CRM: 020-8123-4455.\n\nAddress verified via proof of residence:\nApt 3B, 14 Riverside Walk, Bristol, BS14ST, United Kingdom.\n\nLogin activity: current IP 172.16.0.5; prior IP 203.0.113.27.\n\nBank details for refunds: bank Lloyds Bank, sort code 11-22-33, account number 87654321.\nIBAN used for international transfers: GB29 NWBK 6016 1331 9268 19.\n\nPayment method update: Visa 4242 4242 4242 4242 and Mastercard 5555 5555 5555 4444 stored; expiry 11/28.\nNote: customer mentioned “card ending 7788” during the call.\n\nTimeline: verification completed on 09 January 2026.\nTransaction refs: TXN-91c0a7d2e4 and TXN-REF-120045.\n\nInternal refs include ACCOUNT_ID ACC-551209, CUSTOMER_REF CUST-8801734, session SESSION-4C2D9E10, and internal id INT-UK-004291.\nSupport ticket SUP-2026-10488 raised regarding merchant BrightCloud Services Ltd.",
+      "expected_typed": {
+        "PERSON": [
+          "Aisha Patel"
+        ],
+        "DATE_OF_BIRTH": [
+          "12 March 1990"
+        ],
+        "DATE": [
+          "09 January 2026"
+        ],
+        "EMAIL_ADDRESS": [
+          "a.patel@stonebridge.co.uk",
+          "aisha.patel90@example.co.uk"
+        ],
+        "UK_PHONE_NUMBER": [
+          "+44 7700 900987",
+          "020 8123 4455",
+          "020-8123-4455"
+        ],
+        "UK_ADDRESS": [
+          "Apt 3B, 14 Riverside Walk, Bristol, BS14ST, United Kingdom"
+        ],
+        "IP_ADDRESS": [
+          "172.16.0.5",
+          "203.0.113.27"
+        ],
+        "UK_SORT_CODE": [
+          "11-22-33"
+        ],
+        "UK_ACCOUNT_NUMBER": [
+          "87654321"
+        ],
+        "UK_IBAN": [
+          "GB29 NWBK 6016 1331 9268 19"
+        ],
+        "CREDIT_CARD_NUMBER": [
+          "4242 4242 4242 4242",
+          "5555 5555 5555 4444"
+        ],
+        "CARD_EXPIRY": [
+          "11/28"
+        ],
+        "TRANSACTION_ID": [
+          "TXN-91c0a7d2e4",
+          "TXN-REF-120045"
+        ],
+        "ACCOUNT_ID": [
+          "ACC-551209"
+        ],
+        "CUSTOMER_REFERENCE": [
+          "CUST-8801734"
+        ],
+        "SESSION_ID": [
+          "SESSION-4C2D9E10"
+        ],
+        "SUPPORT_TICKET_NUMBER": [
+          "SUP-2026-10488"
+        ],
+        "INTERNAL_ID": [
+          "INT-UK-004291"
+        ],
+        "ORG": [
+          "BrightCloud Services Ltd",
+          "Lloyds Bank"
+        ]
+      }
+    },
+    {"id": "sample_4",
+    "text": "QUEUE: KYC  |  STATUS: pending docs\nAgent: HM\n\nCaller says name on account is Harriet J. Evans (sometimes shows as Harriet Jane Evans in older CRM)\nDOB: 05 July 1992\n\nAddress on file:\nFlat 12, Rosewood Court\n18 Queens Road\nBristol BS8 1QZ\nUnited Kingdom\n\nContact:\nEmail: harriet.evans92@rosewoodmail.co.uk\nPhone (mobile): 07400 123 456\nAlt landline: 020 7946 0321\n\nLogin/IP notes: successful login from 81.2.69.142; prior attempt from 10.0.0.15 (internal)\nSession: sess_7f3a9c21\n\nBanking:\nSort code 60-16-13  |  Acct 31926819\nIBAN: GB29 NWBK 6016 1331 9268 19\n\nCard used for verification: 4242 4242 4242 4242  exp 06/28\n\nRefs:\nTXN: TRX-2026-01-15-884201\nCust ref: CUST-REF-UK-019332\nTicket: SUP-784391\nAccount ID: ACC-0091882\nInternal ID: INT-44A19\n\nAction: asked for proof of addr, told customer to reply to CASE-UPDATE thread.",
+    "expected_typed": {
+      "PERSON": ["Harriet J. Evans", "Harriet Jane Evans"],
+      "ORG": [],
+      "EMAIL_ADDRESS": ["harriet.evans92@rosewoodmail.co.uk"],
+      "UK_PHONE_NUMBER": ["07400 123 456", "020 7946 0321"],
+      "IP_ADDRESS": ["81.2.69.142", "10.0.0.15"],
+      "DATE": ["15/01 14:03", "15/01/2026"],
+      "DATE_OF_BIRTH": ["05 July 1992"],
+      "LOCATION": ["Bristol"],
+      "UK_POSTCODE": ["BS8 1QZ"],
+      "UK_ADDRESS": ["Flat 12, Rosewood Court, 18 Queens Road, Bristol BS8 1QZ, United Kingdom"],
+      "UK_SORT_CODE": ["60-16-13"],
+      "UK_ACCOUNT_NUMBER": ["31926819"],
+      "UK_IBAN": ["GB29 NWBK 6016 1331 9268 19"],
+      "CREDIT_CARD_NUMBER": ["4242 4242 4242 4242"],
+      "CARD_EXPIRY": ["06/28"],
+      "TRANSACTION_ID": ["TRX-2026-01-15-884201"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-019332"],
+      "SESSION_ID": ["sess_7f3a9c21"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-784391"],
+      "ACCOUNT_ID": ["ACC-0091882"],
+      "INTERNAL_ID": ["INT-44A19"]
+    }
+  },
+  {"id": "sample_5",
+    "text": "CASE-UPDATE // 14/01 09:17\nAgent initials: RS\n\nOrg on merchant descriptor: Northbridge Utilities Ltd (customer says it appears as NORTHBRIDGE UTIL)\nCustomer: Daniel O'Neill\n\nIssue: chargeback request re: card payment.\nCard: 5555 5555 5555 4444  expiry 11/27\nTransaction ref: TRX-2026-01-14-330072\n\nCustomer reference: CUST-REF-UK-442010\nSupport ticket: TKT-558120\nAccount: ACC-7712003  (internal INT-8C0F2)\n\nContact details:\nemail daniel.oneill+support@inboxmail.uk\nphone 0161 496 0123\n\nAddress confirmed on call:\n27 Meadow Lane, Didsbury, Manchester M20 6GH\n\nAuth/session logs: sess_b0d19e77; IP 203.0.113.8\n\nNotes: advised 10 working days + sent template letter dated 14 January 2026.",
+    "expected_typed": {
+      "PERSON": ["Daniel O'Neill"],
+      "ORG": ["Northbridge Utilities Ltd", "NORTHBRIDGE UTIL"],
+      "EMAIL_ADDRESS": ["daniel.oneill+support@inboxmail.uk"],
+      "UK_PHONE_NUMBER": ["0161 496 0123"],
+      "IP_ADDRESS": ["203.0.113.8"],
+      "DATE": ["14/01 09:17", "14 January 2026"],
+      "DATE_OF_BIRTH": [],
+      "LOCATION": ["Didsbury", "Manchester"],
+      "UK_POSTCODE": ["M20 6GH"],
+      "UK_ADDRESS": ["27 Meadow Lane, Didsbury, Manchester M20 6GH"],
+      "UK_SORT_CODE": [],
+      "UK_ACCOUNT_NUMBER": [],
+      "UK_IBAN": [],
+      "CREDIT_CARD_NUMBER": ["5555 5555 5555 4444"],
+      "CARD_EXPIRY": ["11/27"],
+      "TRANSACTION_ID": ["TRX-2026-01-14-330072"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-442010"],
+      "SESSION_ID": ["sess_b0d19e77"],
+      "SUPPORT_TICKET_NUMBER": ["TKT-558120"],
+      "ACCOUNT_ID": ["ACC-7712003"],
+      "INTERNAL_ID": ["INT-8C0F2"]
+    }
+  },
+  {"id": "sample_6",
+    "text": "STATUS: resolved   QUEUE: Billing\nagent: KL\n\nSpoke to: Priya Shah\nConfirmed DOB on security: 22/03/1988\n\nMove-in address for correspondence (temp):\nRoom 3, 9A King Street\nEdinburgh EH2 4NF\n\nAlso mentions work location: Canary Wharf, London\n\nContact:\npriya.shah88@brightleaf.co.uk\n07555 901 020\n\nNetwork logs show login from IP 145.14.21.33\nSession id: sess_2c91f6ad\n\nBank details for refund:\nSort code: 20-15-55\nAccount number: 12345678\nIBAN entered: GB33 BUKB 2020 1512 3456 78\n\nRefund refs:\nTransaction ID TRX-2026-01-15-990014\nCustomer ref CUST-REF-UK-700118\nTicket SUP-900771\nAccount ID ACC-4450091\nInternal ID INT-2D19B\n\nOutcome: refund initiated 15/01/2026 and email sent.",
+    "expected_typed": {
+      "PERSON": ["Priya Shah"],
+      "ORG": [],
+      "EMAIL_ADDRESS": ["priya.shah88@brightleaf.co.uk"],
+      "UK_PHONE_NUMBER": ["07555 901 020"],
+      "IP_ADDRESS": ["145.14.21.33"],
+      "DATE": ["15/01 18:44", "15/01/2026"],
+      "DATE_OF_BIRTH": ["22/03/1988"],
+      "LOCATION": ["Room 3, 9A King Street Edinburgh EH2 4NF", "Canary Wharf, London"],
+      "UK_POSTCODE": ["EH2 4NF"],
+      "UK_ADDRESS": ["Room 3, 9A King Street, Edinburgh EH2 4NF"],
+      "UK_SORT_CODE": ["20-15-55"],
+      "UK_ACCOUNT_NUMBER": ["12345678"],
+      "UK_IBAN": ["GB33 BUKB 2020 1512 3456 78"],
+      "CREDIT_CARD_NUMBER": [],
+      "CARD_EXPIRY": [],
+      "TRANSACTION_ID": ["TRX-2026-01-15-990014"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-700118"],
+      "SESSION_ID": ["sess_2c91f6ad"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-900771"],
+      "ACCOUNT_ID": ["ACC-4450091"],
+      "INTERNAL_ID": ["INT-2D19B"]
+    }
+  },
+  {"id": "sample_7",
+    "text": " QUEUE: Fraud Review (manual)\nAgent: TB\n\nName reported on statement: Aisha Khan\nOrganisation involved (beneficiary): Rivergate Trading Co.\n\nCustomer says they never authorised bank transfer.\n\nAddress verified:\n5 Willow Park\nLeeds LS6 2QH\n\nEmail on file a.khan@rivergate-mail.com\nPhone: 0113 496 7788\n\nIP from suspicious login: 198.51.100.24\nSession: sess_9a0f1b3e\n\nBanking identifiers captured in chat transcript:\nSort code 40-12-34\nAccount number 87654321\nIBAN: GB82 WEST 4012 3487 6543 21\n\nRefs:\nTransaction ID TRX-2026-01-13-771004\nCustomer reference CUST-REF-UK-118002\nSupport ticket number CASE-77100\nAccount ID ACC-3001190\nInternal ID INT-7F31D\n\nDate letter issued: 13 January 2026",
+    "expected_typed": {
+      "PERSON": ["Aisha Khan"],
+      "ORG": ["Rivergate Trading Co."],
+      "EMAIL_ADDRESS": ["a.khan@rivergate-mail.com"],
+      "UK_PHONE_NUMBER": ["0113 496 7788"],
+      "IP_ADDRESS": ["198.51.100.24"],
+      "DATE": ["13/01 12:06", "13 January 2026"],
+      "DATE_OF_BIRTH": [],
+      "LOCATION": ["Leeds"],
+      "UK_POSTCODE": ["LS6 2QH"],
+      "UK_ADDRESS": ["5 Willow Park, Leeds LS6 2QH"],
+      "UK_SORT_CODE": ["40-12-34"],
+      "UK_ACCOUNT_NUMBER": ["87654321"],
+      "UK_IBAN": ["GB82 WEST 4012 3487 6543 21"],
+      "CREDIT_CARD_NUMBER": [],
+      "CARD_EXPIRY": [],
+      "TRANSACTION_ID": ["TRX-2026-01-13-771004"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-118002"],
+      "SESSION_ID": ["sess_9a0f1b3e"],
+      "SUPPORT_TICKET_NUMBER": ["CASE-77100"],
+      "ACCOUNT_ID": ["ACC-3001190"],
+      "INTERNAL_ID": ["INT-7F31D"]
+    }
+  },
+  {"id": "sample_8",
+    "text": "  QUEUE: Onboarding  |  STATUS: awaiting signature\nAgent: JW\n\nCustomer details entered:\nName: Thomas R. Millar\nDOB (from ID check): 17 September 1979\nEmployer/Org: Alder & Finch Partners\n\nHome address:\nUnit 8, Harbour View Apartments, 1 Dock Road, Cardiff CF10 4BQ\n\nContact:\nthomas.millar@alderfinch.co.uk\n029 2018 7744\n\nTechnical:\nIP seen at registration: 62.31.45.201\nSession ID: sess_0d4f8a12\n\nPayment method for £1 verification:\nCard number 4000 0566 5566 5556  exp 03/29\n\nAccount setup refs:\nCustomer reference: CUST-REF-UK-901771\nSupport ticket: SUP-118900\nAccount ID: ACC-9900102\nInternal ID: INT-1B77E\nTransaction ID: TRX-2026-01-15-100201\n\nNote: welcome email sent 15 January 2026; asked customer to confirm postcode CF10 4BQ matches bank statement.",
+    "expected_typed": {
+      "PERSON": ["Thomas R. Millar"],
+      "ORG": ["Alder & Finch Partners"],
+      "EMAIL_ADDRESS": ["thomas.millar@alderfinch.co.uk"],
+      "UK_PHONE_NUMBER": ["029 2018 7744"],
+      "IP_ADDRESS": ["62.31.45.201"],
+      "DATE": ["15/01 07:55", "15 January 2026"],
+      "DATE_OF_BIRTH": ["17 September 1979"],
+      "LOCATION": [],
+      "UK_POSTCODE": ["CF10 4BQ"],
+      "UK_ADDRESS": ["Unit 8, Harbour View Apartments, 1 Dock Road, Cardiff CF10 4BQ"],
+      "UK_SORT_CODE": [],
+      "UK_ACCOUNT_NUMBER": [],
+      "UK_IBAN": [],
+      "CREDIT_CARD_NUMBER": ["4000 0566 5566 5556"],
+      "CARD_EXPIRY": ["03/29"],
+      "TRANSACTION_ID": ["TRX-2026-01-15-100201"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-901771"],
+      "SESSION_ID": ["sess_0d4f8a12"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-118900"],
+      "ACCOUNT_ID": ["ACC-9900102"],
+      "INTERNAL_ID": ["INT-1B77E"]
+    }
+  },{
+    "id": "sample_9",
+    "text": "16/01 10:22   QUEUE: Payments   STATUS: escalated\nagent: RP\n\nCustomer name showing on portal: Mark D. Holloway\nAlt spelling in email trail: Mark David Holloway\n\nDOB used for security: 14-02-1985\n\nBilling address:\nApartment 5B\n72 Alder Road\nNottingham NG7 2LX\n\nContact\nmark.holloway85@fastboxmail.co.uk\n07811 223344\n\nLogin trail: IP 212.58.246.79, earlier 192.168.1.9\nSession = sess_a91d77bc\n\nBank details captured:\nSort Code 30-94-57\nAccount 55443322\nIBAN GB55 BARC 3094 5755 4433 22\n\nRefs\nTransaction TRX-2026-01-16-559120\nCustomer ref CUST-REF-UK-553120\nTicket SUP-991122\nAccount ACC-7720091\nInternal INT-77AC3\n\nNote: user claims refund email sent 16 January 2026.",
+    "expected_typed": {
+      "PERSON": ["Mark D. Holloway", "Mark David Holloway"],
+      "ORG": [],
+      "EMAIL_ADDRESS": ["mark.holloway85@fastboxmail.co.uk"],
+      "UK_PHONE_NUMBER": ["07811 223344"],
+      "IP_ADDRESS": ["212.58.246.79", "192.168.1.9"],
+      "DATE": ["16/01 10:22", "16 January 2026"],
+      "DATE_OF_BIRTH": ["14-02-1985"],
+      "LOCATION": [],
+      "UK_POSTCODE": [],
+      "UK_ADDRESS": ["Apartment 5B, 72 Alder Road, Nottingham NG7 2LX"],
+      "UK_SORT_CODE": ["30-94-57"],
+      "UK_ACCOUNT_NUMBER": ["55443322"],
+      "UK_IBAN": ["GB55 BARC 3094 5755 4433 22"],
+      "CREDIT_CARD_NUMBER": [],
+      "CARD_EXPIRY": [],
+      "TRANSACTION_ID": ["TRX-2026-01-16-559120"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-553120"],
+      "SESSION_ID": ["sess_a91d77bc"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-991122"],
+      "ACCOUNT_ID": ["ACC-7720091"],
+      "INTERNAL_ID": ["INT-77AC3"]
+    }
+  },
+  {
+    "id": "sample_10",
+    "text": "CASE-UPDATE 16/01 15:04\nAgent JM\n\nMerchant name: Brighton Parking Services Ltd\nCustomer: Eleanor P. Wright\n\nCard used 4111 1111 1111 1111 exp 08/27\nTransaction ref TRX-2026-01-16-770011\n\nAddress confirmed:\n44 Seaview Terrace, Brighton BN2 5LP\n\nEmail eleanor.wright@bpservices.co.uk\nPhone 01273 441122\n\nIP during payment: 203.0.113.44\nSession sess_61b1e19f\n\nCustomer ref CUST-REF-UK-880044\nTicket CASE-880044\nAccount ACC-5589912\nInternal ID INT-BC712\n\nLetter issued 16 January 2026.",
+    "expected_typed": {
+      "PERSON": ["Eleanor P. Wright"],
+      "ORG": ["Brighton Parking Services Ltd"],
+      "EMAIL_ADDRESS": ["eleanor.wright@bpservices.co.uk"],
+      "UK_PHONE_NUMBER": ["01273 441122"],
+      "IP_ADDRESS": ["203.0.113.44"],
+      "DATE": ["16/01 15:04", "16 January 2026"],
+      "DATE_OF_BIRTH": [],
+      "LOCATION": [],
+      "UK_POSTCODE": [],
+      "UK_ADDRESS": ["44 Seaview Terrace, Brighton BN2 5LP"],
+      "UK_SORT_CODE": [],
+      "UK_ACCOUNT_NUMBER": [],
+      "UK_IBAN": [],
+      "CREDIT_CARD_NUMBER": ["4111 1111 1111 1111"],
+      "CARD_EXPIRY": ["08/27"],
+      "TRANSACTION_ID": ["TRX-2026-01-16-770011"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-880044"],
+      "SESSION_ID": ["sess_61b1e19f"],
+      "SUPPORT_TICKET_NUMBER": ["CASE-880044"],
+      "ACCOUNT_ID": ["ACC-5589912"],
+      "INTERNAL_ID": ["INT-BC712"]
+    }
+  },
+  {
+    "id": "sample_11",
+    "text": "QUEUE: KYC\nAgent: LS\n\nName on application: Yusuf Al-Mahdi\n\nDOB: 1994/11/03\n\nHome address:\nFlat 7, Crescent House\n114 Baker Street\nLondon W1U 6TR\n\nContact yusuf.mahdi@securemail.uk\nPhone 07990 443322\n\nIP check 82.13.77.91\nSession sess_4f91caa2\n\nBank info submitted:\nSort code 11-22-33\nAccount number 99887766\nIBAN GB19 HLFX 1122 3399 8877 66\n\nRefs\nTransaction TRX-2026-01-16-310009\nCustomer CUST-REF-UK-220771\nTicket SUP-220771\nAccount ACC-4422911\nInternal INT-091AF",
+    "expected_typed": {
+      "PERSON": ["Yusuf Al-Mahdi"],
+      "ORG": [],
+      "EMAIL_ADDRESS": ["yusuf.mahdi@securemail.uk"],
+      "UK_PHONE_NUMBER": ["07990 443322"],
+      "IP_ADDRESS": ["82.13.77.91"],
+      "DATE": ["16/01 08:09"],
+      "DATE_OF_BIRTH": ["1994/11/03"],
+      "LOCATION": [],
+      "UK_POSTCODE": [],
+      "UK_ADDRESS": ["Flat 7, Crescent House, 114 Baker Street, London W1U 6TR"],
+      "UK_SORT_CODE": ["11-22-33"],
+      "UK_ACCOUNT_NUMBER": ["99887766"],
+      "UK_IBAN": ["GB19 HLFX 1122 3399 8877 66"],
+      "CREDIT_CARD_NUMBER": [],
+      "CARD_EXPIRY": [],
+      "TRANSACTION_ID": ["TRX-2026-01-16-310009"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-220771"],
+      "SESSION_ID": ["sess_4f91caa2"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-220771"],
+      "ACCOUNT_ID": ["ACC-4422911"],
+      "INTERNAL_ID": ["INT-091AF"]
+    }
+  },
+  {
+    "id": "sample_12",
+    "text": "Fraud note 16/01 19:33\nagent ID: PL\n\nCustomer: Louise McBride\n\nSuspicious merchant: Silverline Car Hire\n\nCard 6011 0009 9013 9424 exp 12/26\nTransaction ID TRX-2026-01-16-888774\n\nCustomer email louise.mcbride77@blueyonder.co.uk\nPhone 028 9033 2211\n\nAddress 3 Oak Villas, Belfast BT7 3JH\n\nIP 145.98.33.10\nSession sess_7ac3f002\n\nCustomer ref CUST-REF-UK-992001\nTicket SUP-992001\nAccount ACC-1123004\nInternal INT-CC991\n\nLetter dated 16 January 2026",
+    "expected_typed": {
+      "PERSON": ["Louise McBride"],
+      "ORG": ["Silverline Car Hire"],
+      "EMAIL_ADDRESS": ["louise.mcbride77@blueyonder.co.uk"],
+      "UK_PHONE_NUMBER": ["028 9033 2211"],
+      "IP_ADDRESS": ["145.98.33.10"],
+      "DATE": ["16/01 19:33", "16 January 2026"],
+      "DATE_OF_BIRTH": [],
+      "LOCATION": [],
+      "UK_POSTCODE": [],
+      "UK_ADDRESS": ["3 Oak Villas, Belfast BT7 3JH"],
+      "UK_SORT_CODE": [],
+      "UK_ACCOUNT_NUMBER": [],
+      "UK_IBAN": [],
+      "CREDIT_CARD_NUMBER": ["6011 0009 9013 9424"],
+      "CARD_EXPIRY": ["12/26"],
+      "TRANSACTION_ID": ["TRX-2026-01-16-888774"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-992001"],
+      "SESSION_ID": ["sess_7ac3f002"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-992001"],
+      "ACCOUNT_ID": ["ACC-1123004"],
+      "INTERNAL_ID": ["INT-CC991"]
+    }
+  },
+  {
+    "id": "sample_13",
+    "text": "QUEUE: Onboarding\nagent SB\n\nApplicant name: George A. Patel\nDOB 01/06/1990\n\nEmployer org: Westmoor Consulting Group\n\nAddress:\n21 Orchard Way, Reading RG2 9QF\n\nEmail george.patel@westmoor-group.co.uk\nPhone 0118 992 7744\n\nIP logged 51.140.77.9\nSession sess_113a9cfe\n\nAccount verification via £1 test card\nCard 4000 1234 5678 9010 exp 04/28\n\nRefs\nTRX-2026-01-16-441002\nCUST-REF-UK-440771\nSUP-440771\nACC-2200441\nINT-EE120\n\nWelcome email sent 16 January 2026",
+    "expected_typed": {
+      "PERSON": ["George A. Patel"],
+      "ORG": ["Westmoor Consulting Group"],
+      "EMAIL_ADDRESS": ["george.patel@westmoor-group.co.uk"],
+      "UK_PHONE_NUMBER": ["0118 992 7744"],
+      "IP_ADDRESS": ["51.140.77.9"],
+      "DATE": ["16/01 13:41", "16 January 2026"],
+      "DATE_OF_BIRTH": ["01/06/1990"],
+      "LOCATION": [],
+      "UK_POSTCODE": [],
+      "UK_ADDRESS": ["21 Orchard Way, Reading RG2 9QF"],
+      "UK_SORT_CODE": [],
+      "UK_ACCOUNT_NUMBER": [],
+      "UK_IBAN": [],
+      "CREDIT_CARD_NUMBER": ["4000 1234 5678 9010"],
+      "CARD_EXPIRY": ["04/28"],
+      "TRANSACTION_ID": ["TRX-2026-01-16-441002"],
+      "CUSTOMER_REFERENCE": ["CUST-REF-UK-440771"],
+      "SESSION_ID": ["sess_113a9cfe"],
+      "SUPPORT_TICKET_NUMBER": ["SUP-440771"],
+      "ACCOUNT_ID": ["ACC-2200441"],
+      "INTERNAL_ID": ["INT-EE120"]
+    }
+  }
+  ]
+}
