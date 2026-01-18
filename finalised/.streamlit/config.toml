@@ -1,0 +1,11 @@
+[theme]
+base = "light"
+primaryColor = "#2E6FEE"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F5F7FB"
+textColor = "#111827"
+
+[server]
+# Helps when deploying behind proxies.
+enableCORS = false
+enableXsrfProtection = true

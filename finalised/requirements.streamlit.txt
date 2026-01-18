@@ -1,0 +1,7 @@
+streamlit>=1.30
+# Core model + inference
+# Note: GLiNER depends on PyTorch/Transformers; installs can be heavy on some platforms.
+gliner
+torch
+# Optional: nicer tables; Streamlit can run without it, but it helps.
+pandas
