@@ -5,24 +5,84 @@ from typing import Any, Dict, List, Tuple
 import streamlit as st
 
 
-st.set_page_config(page_title="PII Masker", page_icon="🛡️", layout="wide")
+st.set_page_config(
+        page_title="PII Masker",
+        page_icon="🛡️",
+        layout="wide",
+        initial_sidebar_state="expanded",
+)
 
 st.markdown(
     """
     <style>
-      .block-container { padding-top: 2.2rem; }
-      div[data-testid="stMetric"] { background: #F5F7FB; padding: 12px 14px; border-radius: 12px; }
-      .small-muted { color: rgba(17, 24, 39, 0.72); font-size: 0.92rem; }
-      .card { background: #FFFFFF; border: 1px solid rgba(17, 24, 39, 0.08); border-radius: 14px; padding: 14px 16px; }
+            :root {
+                --bg: #F8FAFC;
+                --card: #FFFFFF;
+                --border: rgba(15, 23, 42, 0.10);
+                --muted: rgba(15, 23, 42, 0.72);
+                --shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+            }
+
+            .stApp { background: var(--bg); }
+            .block-container { padding-top: 1.6rem; padding-bottom: 2.5rem; }
+
+            /* Sidebar */
+            section[data-testid="stSidebar"] { background: #FFFFFF; border-right: 1px solid var(--border); }
+            section[data-testid="stSidebar"] .block-container { padding-top: 1.25rem; }
+
+            /* Cards */
+            .card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 14px 16px;
+                box-shadow: var(--shadow);
+            }
+            .small-muted { color: var(--muted); font-size: 0.92rem; }
+            .kpi {
+                background: #F1F5F9;
+                border: 1px solid rgba(15, 23, 42, 0.06);
+                border-radius: 14px;
+                padding: 10px 12px;
+            }
+
+            /* Metrics: keep Streamlit metric but make it look consistent */
+            div[data-testid="stMetric"] {
+                background: #F1F5F9;
+                border: 1px solid rgba(15, 23, 42, 0.06);
+                padding: 12px 14px;
+                border-radius: 14px;
+            }
+
+            /* Inputs */
+            textarea { border-radius: 12px !important; }
+            .stDownloadButton > button, .stButton > button {
+                border-radius: 12px !important;
+            }
+
+            /* Reduce extra top margin on headers */
+            h1, h2, h3 { letter-spacing: -0.02em; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-st.markdown("## PII Masker")
+if "input_text" not in st.session_state:
+        st.session_state["input_text"] = ""
+if "last_result" not in st.session_state:
+        st.session_state["last_result"] = None
+
+st.title("PII Masker")
+st.caption("Detect and mask PII with GLiNER + deterministic regex backstops. Export masked text and details.")
+
 st.markdown(
-    '<div class="small-muted">GLiNER entity detection + deterministic regex backstops. Paste text, mask, and export results.</div>',
-    unsafe_allow_html=True,
+        """
+        <div class="card">
+            <b>How to use</b>
+            <div class="small-muted">1) Paste text  •  2) Click Mask  •  3) Download masked output</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
 )
 
 
@@ -55,11 +115,8 @@ def _run_masking(
 with st.sidebar:
     st.markdown("### Settings")
 
-    model_name = st.text_input(
-        "GLiNER model",
-        value=os.getenv("GLINER_MODEL", "urchade/gliner_multi_pii-v1"),
-        help="Hugging Face model id (downloaded on first use).",
-    )
+    # Keep model selection out of the UI; configure via env var instead.
+    model_name = os.getenv("GLINER_MODEL", "urchade/gliner_multi_pii-v1")
 
     threshold = st.slider(
         "Detection threshold",
@@ -90,18 +147,9 @@ with st.sidebar:
     st.caption("\n".join(runtime_lines))
 
 
-tab_mask, tab_about = st.tabs(["Mask", "About"])
+tab_mask, = st.tabs(["Mask"])
 
 with tab_mask:
-    st.markdown(
-        """
-        <div class="card">
-          <b>Safety note:</b> avoid pasting real customer PII into public deployments.
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
     st.write("")
     col_left, col_right = st.columns((1, 1))
 
@@ -122,23 +170,39 @@ Transaction ID: TXN-77834192
 
 Issue: Customer claims £2,450 was transferred on 11/01/2026."""
 
+    def _load_example() -> None:
+        st.session_state["input_text"] = default_example
+
+    def _clear_all() -> None:
+        st.session_state["input_text"] = ""
+        st.session_state["last_result"] = None
+
     with col_left:
         st.subheader("Input")
         with st.container(border=True):
             input_text = st.text_area(
                 "Text to mask",
+                key="input_text",
                 height=320,
                 placeholder="Paste text containing PII here...",
-                value=st.session_state.get("input_text", ""),
             )
 
             c1, c2 = st.columns((1, 1))
             with c1:
                 run = st.button("Mask", type="primary", use_container_width=True)
             with c2:
-                if st.button("Load example", use_container_width=True):
-                    st.session_state["input_text"] = default_example
-                    st.rerun()
+                st.button(
+                    "Load example",
+                    use_container_width=True,
+                    on_click=_load_example,
+                )
+
+            st.button(
+                "Clear",
+                use_container_width=True,
+                on_click=_clear_all,
+                help="Clears the input and any previous results.",
+            )
 
     with col_right:
         st.subheader("Output")
@@ -148,7 +212,7 @@ Issue: Customer claims £2,450 was transferred on 11/01/2026."""
                     st.warning("Please paste some text first.")
                 else:
                     started = time.perf_counter()
-                    with st.spinner("Running masking pipeline..."):
+                    with st.spinner("Masking text..."):
                         try:
                             masked_text, mapping, scores, spans = _run_masking(
                                 text=input_text,
@@ -158,72 +222,74 @@ Issue: Customer claims £2,450 was transferred on 11/01/2026."""
                         except Exception as e:
                             st.error("Masking failed.")
                             st.exception(e)
+                            st.session_state["last_result"] = None
                         else:
                             elapsed_ms = int((time.perf_counter() - started) * 1000)
-                            st.text_area("Masked text", value=masked_text, height=320)
+                            st.session_state["last_result"] = {
+                                "masked_text": masked_text,
+                                "mapping": mapping,
+                                "scores": scores,
+                                "spans": spans,
+                                "elapsed_ms": elapsed_ms,
+                            }
 
-                            st.write("")
-                            m1, m2, m3 = st.columns(3)
-                            m1.metric("Tags", len(mapping))
-                            m2.metric("Spans", len(spans))
-                            m3.metric("Time", f"{elapsed_ms} ms")
-
-                            details_rows = []
-                            all_tags = sorted(set(mapping.keys()) | set(scores.keys()))
-                            for tag in all_tags:
-                                row = {"tag": tag}
-                                if show_mapping:
-                                    row["original"] = mapping.get(tag, "")
-                                if show_scores:
-                                    score = scores.get(tag, None)
-                                    row["score"] = None if score is None else float(score)
-                                details_rows.append(row)
-
-                            with st.expander("Details table", expanded=True):
-                                st.dataframe(details_rows, use_container_width=True)
-                                if show_mapping:
-                                    st.caption("Mapping shows what each placeholder replaced.")
-
-                                c_dl1, c_dl2 = st.columns((1, 1))
-                                with c_dl1:
-                                    st.download_button(
-                                        "Download masked text",
-                                        data=masked_text,
-                                        file_name="masked.txt",
-                                        mime="text/plain",
-                                        use_container_width=True,
-                                    )
-                                with c_dl2:
-                                    try:
-                                        import json
-
-                                        st.download_button(
-                                            "Download details (JSON)",
-                                            data=json.dumps(details_rows, indent=2, ensure_ascii=False),
-                                            file_name="details.json",
-                                            mime="application/json",
-                                            use_container_width=True,
-                                        )
-                                    except Exception:
-                                        pass
-
-                            if show_spans:
-                                with st.expander("Raw spans (debug)", expanded=False):
-                                    st.dataframe(spans, use_container_width=True)
-            else:
+            last = st.session_state.get("last_result")
+            if last is None:
                 st.info("Paste text on the left, then click ‘Mask’.", icon="ℹ️")
+            else:
+                masked_text = last["masked_text"]
+                mapping = last["mapping"]
+                scores = last["scores"]
+                spans = last["spans"]
+                elapsed_ms = int(last.get("elapsed_ms", 0))
 
-with tab_about:
-    st.markdown(
-        """
-        ### What this app does
-        - Runs **GLiNER** entity detection over the input text.
-        - Maps GLiNER labels to your canonical labels.
-        - Adds deterministic regex-based spans to cover common misses.
-        - Replaces detected spans with placeholders like `[PERSON_1]`.
+                st.text_area("Masked text", value=masked_text, height=320)
 
-        ### Notes
-        - On first run, the model downloads and may take time.
-        - Free hosting is typically CPU-only; performance depends on text length.
-        """
-    )
+                st.write("")
+                m1, m2, m3 = st.columns(3)
+                m1.metric("Tags", len(mapping))
+                m2.metric("Spans", len(spans))
+                m3.metric("Time", f"{elapsed_ms} ms")
+
+                details_rows = []
+                all_tags = sorted(set(mapping.keys()) | set(scores.keys()))
+                for tag in all_tags:
+                    row = {"tag": tag}
+                    if show_mapping:
+                        row["original"] = mapping.get(tag, "")
+                    if show_scores:
+                        score = scores.get(tag, None)
+                        row["score"] = None if score is None else float(score)
+                    details_rows.append(row)
+
+                with st.expander("Details", expanded=True):
+                    st.dataframe(details_rows, use_container_width=True)
+                    if show_mapping:
+                        st.caption("Mapping shows what each placeholder replaced.")
+
+                    c_dl1, c_dl2 = st.columns((1, 1))
+                    with c_dl1:
+                        st.download_button(
+                            "Download masked text",
+                            data=masked_text,
+                            file_name="masked.txt",
+                            mime="text/plain",
+                            use_container_width=True,
+                        )
+                    with c_dl2:
+                        try:
+                            import json
+
+                            st.download_button(
+                                "Download details (JSON)",
+                                data=json.dumps(details_rows, indent=2, ensure_ascii=False),
+                                file_name="details.json",
+                                mime="application/json",
+                                use_container_width=True,
+                            )
+                        except Exception:
+                            pass
+
+                if show_spans:
+                    with st.expander("Raw spans (debug)", expanded=False):
+                        st.dataframe(spans, use_container_width=True)
