@@ -29,7 +29,14 @@ st.markdown(
 @st.cache_resource(show_spinner=False)
 def _load_gliner(model_name: str):
     # GLiNER is an optional dependency; keep import inside the cached function.
-    from gliner import GLiNER
+    try:
+        from gliner import GLiNER
+    except Exception as e:
+        raise RuntimeError(
+            "Failed to import 'gliner'. If you're deploying on Streamlit Community Cloud, "
+            "ensure you have a repo-root requirements.txt (e.g. '-r finalised/requirements.streamlit.txt') "
+            "and pin a supported Python in runtime.txt (e.g. python-3.10 or python-3.11)."
+        ) from e
 
     return GLiNER.from_pretrained(model_name)
 
