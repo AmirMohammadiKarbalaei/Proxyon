@@ -23,55 +23,169 @@ def _is_valid_ipv4(s: str) -> bool:
     return all(0 <= n <= 255 for n in nums)
 
 
-def _expand_to_address_line(text: str, start: int, end: int) -> Optional[Tuple[int, int]]:
-    """
-    If the span (usually a postcode) sits inside a line that looks like a full address,
-    expand to the full line boundaries.
-    """
-    line_start = text.rfind("\n", 0, start)
-    line_start = 0 if line_start == -1 else line_start + 1
-    line_end = text.find("\n", end)
-    line_end = len(text) if line_end == -1 else line_end
+_ADDRESS_HINT_TOKENS = [
+    "street",
+    "st",
+    "road",
+    "rd",
+    "avenue",
+    "ave",
+    "lane",
+    "ln",
+    "drive",
+    "dr",
+    "flat",
+    "apt",
+    "apartment",
+    "unit",
+    "building",
+    "house",
+    "uk",
+    "united kingdom",
+    "london",
+    "england",
+    "scotland",
+    "wales",
+]
 
-    raw_line = text[line_start:line_end]
-    line = raw_line.strip()
+
+def _looks_like_address_component(line: str) -> bool:
+    """Heuristic for whether a single line could be part of a postal address."""
     if not line:
+        return False
+    s = line.strip()
+    if not s:
+        return False
+
+    # Avoid swallowing headings like "Address verified:" or "Customer details:",
+    # but allow inline "Registered address: Flat 3B, ..." patterns.
+    colon = s.find(":")
+    if 0 <= colon <= 30:
+        after = s[colon + 1 :].strip()
+        if not after:
+            return False
+
+        after_lc = after.lower()
+        after_has_digit = bool(re.search(r"\d", after))
+        after_has_comma = "," in after
+        after_has_hint = any(tok in after_lc for tok in _ADDRESS_HINT_TOKENS)
+        after_has_postcode = bool(_UK_POSTCODE_RE.search(after))
+        if not (after_has_postcode or (after_has_digit and after_has_comma) or (after_has_hint and after_has_comma)):
+            return False
+
+    # Avoid extremely long lines (likely paragraphs).
+    if len(s) > 160:
+        return False
+
+    lc = s.lower()
+    has_digit = bool(re.search(r"\d", s))
+    has_comma = "," in s
+    has_hint = any(tok in lc for tok in _ADDRESS_HINT_TOKENS)
+    has_postcode = bool(_UK_POSTCODE_RE.search(s))
+
+    # Typical address lines have digits or address tokens and often commas.
+    if has_postcode:
+        return True
+    if has_digit and (has_comma or has_hint):
+        return True
+    if has_hint and has_comma:
+        return True
+    return False
+
+
+def _line_bounds(text: str, pos: int) -> Tuple[int, int]:
+    line_start = text.rfind("\n", 0, pos)
+    line_start = 0 if line_start == -1 else line_start + 1
+    line_end = text.find("\n", pos)
+    line_end = len(text) if line_end == -1 else line_end
+    return line_start, line_end
+
+
+def _expand_to_address_block(text: str, start: int, end: int, max_lines: int = 4) -> Optional[Tuple[int, int]]:
+    """Expand a postcode span to a likely multi-line address block.
+
+    Many addresses appear split across multiple lines. We expand from the postcode's
+    line upwards/downwards while lines look like address components, stopping at
+    blank lines or headings.
+    """
+    if max_lines < 1:
         return None
 
-    # Heuristics: commas + digits + some street/country-ish token => likely address line
-    lc = line.lower()
-    if line.count(",") < 2:
+    line_start, line_end = _line_bounds(text, start)
+    raw_line = text[line_start:line_end]
+    if not _looks_like_address_component(raw_line):
         return None
-    if not re.search(r"\d", line):
+
+    block_start = line_start
+    block_end = line_end
+    lines_used = 1
+
+    # Expand upwards
+    while lines_used < max_lines and block_start > 0:
+        prev_end = block_start - 1  # at '\n'
+        prev_start = text.rfind("\n", 0, prev_end)
+        prev_start = 0 if prev_start == -1 else prev_start + 1
+        prev_raw = text[prev_start:prev_end]
+        if not prev_raw.strip():
+            break
+        if not _looks_like_address_component(prev_raw):
+            break
+        block_start = prev_start
+        lines_used += 1
+
+    # Expand downwards
+    while lines_used < max_lines and block_end < len(text):
+        if block_end >= len(text) or text[block_end : block_end + 1] != "\n":
+            break
+        next_start = block_end + 1
+        next_end = text.find("\n", next_start)
+        next_end = len(text) if next_end == -1 else next_end
+        next_raw = text[next_start:next_end]
+        if not next_raw.strip():
+            break
+        if not _looks_like_address_component(next_raw):
+            break
+        block_end = next_end
+        lines_used += 1
+
+    raw_block = text[block_start:block_end]
+    if not raw_block.strip():
         return None
-    if not any(
-        tok in lc
-        for tok in [
-            "street",
-            "st",
-            "road",
-            "rd",
-            "avenue",
-            "ave",
-            "lane",
-            "ln",
-            "drive",
-            "dr",
-            "flat",
-            "apt",
-            "apartment",
-            "unit",
-            "uk",
-            "united kingdom",
-            "london",
-        ]
-    ):
+
+    # Trim common prefixes so we don't mask "Registered address is ..." as part of the address.
+    # We only trim within the first line of the block.
+    first_line_end = raw_block.find("\n")
+    if first_line_end == -1:
+        first_line_end = len(raw_block)
+    first_line = raw_block[:first_line_end]
+
+    prefix_re = re.compile(
+        r"^\s*(?:registered|billing|delivery|shipping|residential|home|office)?\s*address\s*(?:is|:|\-|\u2013|\u2014)\s+",
+        re.IGNORECASE,
+    )
+    m = prefix_re.match(first_line)
+    if m is not None:
+        block_start = block_start + m.end()
+        raw_block = text[block_start:block_end]
+        if not raw_block.strip():
+            return None
+
+    candidate = raw_block.strip()
+
+    # Guardrails: require a postcode, plus some structure suggesting a real address.
+    if not _UK_POSTCODE_RE.search(candidate):
+        return None
+    if not re.search(r"\d", candidate):
+        return None
+    if candidate.count(",") < 1:
+        return None
+    if len(candidate) > 260:
         return None
 
     # Map back to exact offsets excluding surrounding whitespace
-    left_ws = len(raw_line) - len(raw_line.lstrip())
-    right_ws = len(raw_line) - len(raw_line.rstrip())
-    return line_start + left_ws, line_end - right_ws
+    left_ws = len(raw_block) - len(raw_block.lstrip())
+    right_ws = len(raw_block) - len(raw_block.rstrip())
+    return block_start + left_ws, block_end - right_ws
 
 
 def extract_regex_spans_v1(text: str) -> List[Dict[str, Any]]:
@@ -118,6 +232,7 @@ def extract_regex_spans_v1(text: str) -> List[Dict[str, Any]]:
         )
 
     # UK postcode (+ optional full-address line expansion)
+    seen_address_blocks: set[tuple[int, int]] = set()
     for m in _UK_POSTCODE_RE.finditer(text):
         spans.append(
             {
@@ -129,6 +244,23 @@ def extract_regex_spans_v1(text: str) -> List[Dict[str, Any]]:
                 "original": text[m.start() : m.end()],
             }
         )
+
+        expanded = _expand_to_address_block(text, m.start(), m.end())
+        if expanded is not None:
+            a_start, a_end = expanded
+            key = (a_start, a_end)
+            if key not in seen_address_blocks:
+                seen_address_blocks.add(key)
+                spans.append(
+                    {
+                        "start": a_start,
+                        "end": a_end,
+                        "label": "UK_ADDRESS",
+                        "score": 0.96,
+                        "source": "regex",
+                        "original": text[a_start:a_end],
+                    }
+                )
 
     return spans
 
