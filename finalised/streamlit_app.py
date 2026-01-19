@@ -100,7 +100,20 @@ def _load_gliner(model_name: str):
             "and pin a supported Python in runtime.txt (e.g. python-3.10 or python-3.11)."
         ) from e
 
-    return GLiNER.from_pretrained(model_name)
+    try:
+        return GLiNER.from_pretrained(model_name)
+    except Exception as e:
+        msg = str(e)
+        hint = ""
+        # Common in Streamlit Cloud: model is gated/private and local dev has cached/token access.
+        if any(k in msg.lower() for k in ["401", "403", "gated", "private", "not authorized", "requires authentication"]):
+            hint = (
+                "\n\nThis looks like an authentication / gated-model error. "
+                "If you're deploying on Streamlit Community Cloud, add a Hugging Face token as a Secret "
+                "(Settings → Secrets) and set it as `HF_TOKEN` (or `HUGGINGFACEHUB_API_TOKEN`). "
+                "Also ensure you've accepted the model's license/terms on Hugging Face for that account."
+            )
+        raise RuntimeError(f"Failed to load GLiNER model '{model_name}'.{hint}\n\nOriginal error: {msg}") from e
 
 
 def _run_masking(
@@ -118,7 +131,7 @@ with st.sidebar:
     st.markdown("### Settings")
 
     model_options = [
-        "nvidia/gliner-PII",
+        # "nvidia/gliner-PII",
         "urchade/gliner_multi_pii-v1",
     ]
 
