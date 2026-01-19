@@ -2,6 +2,51 @@
   "version": 1,
   "tests": [
     {
+      "id": "multiline_address_1",
+      "text": "Customer provided a delivery address:\n\nFlat 3B, 17 Willow Crescent,\nCamden, London, NW1 8TX, United Kingdom.\n\nPlease send the replacement card.",
+      "expected_typed": {
+        "UK_ADDRESS": [
+          "Flat 3B, 17 Willow Crescent, Camden, London, NW1 8TX, United Kingdom"
+        ],
+        "UK_POSTCODE": [
+          "NW1 8TX"
+        ]
+      }
+    },
+    {
+      "id": "inline_address_is_1",
+      "text": "Registered address is Flat 3B, 17 Willow Crescent, Camden, London, NW1 8TX, United Kingdom.\n",
+      "expected_typed": {
+        "UK_ADDRESS": [
+          "Flat 3B, 17 Willow Crescent, Camden, London, NW1 8TX, United Kingdom"
+        ],
+        "UK_POSTCODE": [
+          "NW1 8TX"
+        ]
+      }
+    },
+    {
+      "id": "inline_address_colon_1",
+      "text": "Registered address: Flat 3B, 17 Willow Crescent, Camden, London, NW1 8TX, United Kingdom.",
+      "expected_typed": {
+        "UK_ADDRESS": [
+          "Flat 3B, 17 Willow Crescent, Camden, London, NW1 8TX, United Kingdom"
+        ],
+        "UK_POSTCODE": [
+          "NW1 8TX"
+        ]
+      }
+    },
+    {
+      "id": "person_alias_1",
+      "text": "Ticket opened by Hannah Louise Mercer. Later Hannah called back to confirm details.",
+      "expected_typed": {
+        "PERSON": [
+          "Hannah Louise Mercer"
+        ]
+      }
+    },
+    {
       "id": "sample_1",
       "text": "Customer onboarding record created by Michael Jonathan Carter on 17 February 1989.\n\nPrimary email address on file is michael.carter89@gmail.com, with a secondary contact at m.carter@fintrust.co.uk.\n\nCustomer can be reached via mobile at +44 7700 900123 or office line 020 7946 0321.\n\nResidential address verified during KYC:\nFlat 5, 221B King Street, London, SW1A 1AA, United Kingdom.\n\nCustomer logged in successfully from IP address 192.168.10.42, with a previous login recorded from 10.0.0.15.\n\nBank account details were linked during setup.  \nPrimary current account is held at Barclays Bank, with sort code 20-45-67 and account number 12345678.\n\nAn additional account was added with IBAN GB82 WEST 1234 5698 7654 32 under the name Michael J. Carter.\n\nDebit card ending in 4321 and credit card 4111 1111 1111 1111 (Visa) were used for initial funding.  \nA secondary Mastercard 5500 0000 0000 0004 expired on 08/27 was also stored.\n\nTransaction history shows payment TXN-7f93ad82a1 for £2,450.75 on 03 November 2024, followed by refund transaction TXN-REF-991283 processed two days later.\n\nInternal ledger references include ACCOUNT_ID ACC-982374, CUSTOMER_REF CUST-4419281, and session identifier SESSION-A9F3C77E.\n\nSupport ticket SUP-2024-99182 was opened by the customer to dispute a charge originating from merchant CloudSoft Ltd.\n",
       "expected_typed": {
