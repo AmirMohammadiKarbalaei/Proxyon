@@ -133,7 +133,7 @@ def _merge_adjacent_person_spans(text: str, spans: List[Dict[str, Any]]) -> List
             # Examples: " ", "-", ", ", " " etc.
             if len(gap) > 4:
                 break
-            if not re.fullmatch(r"[\s,\.-']*", gap):
+            if not re.fullmatch(r"[\s,.\-']*", gap):
                 break
 
             n_text = text[n_start:n_end]
