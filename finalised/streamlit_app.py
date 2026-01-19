@@ -71,6 +71,8 @@ if "input_text" not in st.session_state:
         st.session_state["input_text"] = ""
 if "last_result" not in st.session_state:
         st.session_state["last_result"] = None
+if "example_idx" not in st.session_state:
+    st.session_state["example_idx"] = 0
 
 st.title("PII Masker")
 st.caption("Detect and mask PII with GLiNER + deterministic regex backstops. Export masked text and details.")
@@ -115,8 +117,20 @@ def _run_masking(
 with st.sidebar:
     st.markdown("### Settings")
 
-    # Keep model selection out of the UI; configure via env var instead.
-    model_name = os.getenv("GLINER_MODEL", "urchade/gliner_multi_pii-v1")
+    model_options = [
+        "nvidia/gliner-PII",
+        "urchade/gliner_multi_pii-v1",
+    ]
+
+    env_model = os.getenv("GLINER_MODEL", "").strip()
+    default_model_index = model_options.index(env_model) if env_model in model_options else 0
+
+    model_name = st.selectbox(
+        "Model",
+        options=model_options,
+        index=default_model_index,
+        help="Pick the GLiNER model to use for entity detection.",
+    )
 
     threshold = st.slider(
         "Detection threshold",
@@ -153,7 +167,8 @@ with tab_mask:
     st.write("")
     col_left, col_right = st.columns((1, 1))
 
-    default_example = """You are an assistant helping review a customer-reported issue.
+    examples = [
+        """You are an assistant helping review a customer-reported issue.
 
 Customer details:
 Name: Harriet Jane Evans
@@ -170,8 +185,24 @@ Transaction ID: TXN-77834192
 
 Issue: Customer claims £2,450 was transferred on 11/01/2026."""
 
+        ,
+        """On 18 February 2025, customer Hannah Louise Mercer (born 11 November 1991) contacted support to report an unfamiliar bank transfer. She stated that she noticed a payment of £1,875 leaving her account at Westbridge Financial Ltd shortly after logging in from her home address at 42 Oakfield Road, Reading, RG1 4PX.
+
+Hannah can be contacted via hannah.mercer91@outlook.com or on her mobile number 07854 662913, although she mentioned that her work phone 0118 496 0821 is only answered during office hours.
+
+The transaction, reference WB-TRX-558201, was processed successfully on 16/02/2025 from account number 29174638 with sort code 40-22-17 and IBAN GB31BARC40221729174638.
+
+System logs show the login originated from IP address 92.184.33.71 at approximately 01:42 AM, which Hannah confirmed was outside her usual activity pattern.
+
+She also confirmed that a debit card ending 4821, expiring 07/26, is still in her possession and that she has not shared her credentials with anyone else.
+""",
+    ]
+
     def _load_example() -> None:
-        st.session_state["input_text"] = default_example
+        idx = int(st.session_state.get("example_idx", 0))
+        st.session_state["input_text"] = examples[idx % len(examples)]
+        st.session_state["example_idx"] = (idx + 1) % len(examples)
+        st.session_state["last_result"] = None
 
     def _clear_all() -> None:
         st.session_state["input_text"] = ""
