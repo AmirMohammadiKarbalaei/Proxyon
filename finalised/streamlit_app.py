@@ -62,6 +62,36 @@ st.markdown(
 
             /* Reduce extra top margin on headers */
             h1, h2, h3 { letter-spacing: -0.02em; }
+
+            /* Custom chat avatars and bubbles */
+            .chat-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(15, 23, 42, 0.10);
+                background: #FFFFFF;
+                font-size: 1.1rem;
+                flex-shrink: 0;
+            }
+            .chat-marker { display: none; }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.chat-marker.user) {
+                background: #DBEAFE !important;
+                border-color: rgba(59, 130, 246, 0.3) !important;
+                border-radius: 14px !important;
+            }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.chat-marker.assistant) {
+                background: #F3E8FF !important;
+                border-color: rgba(168, 85, 247, 0.3) !important;
+                border-radius: 14px !important;
+            }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.chat-marker) p { margin: 0.2rem 0; }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.chat-marker) ul { margin: 0.3rem 0 0.3rem 1.1rem; }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.chat-marker) p:first-child { margin-top: 0; }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.chat-marker) p:last-child { margin-bottom: 0; }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -83,6 +113,8 @@ if "person_alias_map" not in st.session_state:
     st.session_state["person_alias_map"] = {}
 if "chat_mapping" not in st.session_state:
     st.session_state["chat_mapping"] = {}
+if "processing" not in st.session_state:
+    st.session_state["processing"] = False
 
 
 import google.generativeai as genai
@@ -412,12 +444,64 @@ She also confirmed that a debit card ending 4821, expiring 07/26, is still in he
                         st.dataframe(spans, use_container_width=True)
 
 with tab_chat:
+    def _render_chat_row(role: str, text: str) -> None:
+        role = "user" if role == "user" else "assistant"
+
+        if role == "user":
+            # User: avatar left, bubble right, aligned to the left side
+            col_msg, col_spacer = st.columns([0.8, 0.2], gap="small")
+            with col_msg:
+                cols = st.columns([0.6, 9.4], gap="small")
+                with cols[0]:
+                    st.markdown('<div class="chat-avatar">👤</div>', unsafe_allow_html=True)
+                with cols[1]:
+                    bubble_html = f'''
+                    <div style="background: #DBEAFE; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 14px; padding: 10px 14px; margin-bottom: 12px;">
+                    
+{text}</div>
+
+
+                    '''
+                    st.markdown(bubble_html, unsafe_allow_html=True)
+            with col_spacer:
+                st.write("")
+        else:
+            # Assistant: bubble left, avatar right, aligned to the right side
+            col_spacer, col_msg = st.columns([0.2, 0.8], gap="small")
+            with col_spacer:
+                st.write("")
+            with col_msg:
+                cols = st.columns([9.4, 0.6], gap="small")
+                with cols[0]:
+                    bubble_html = f'''
+                    <div style="background: #F3E8FF; border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 14px; padding: 10px 14px; margin-bottom: 12px;">
+                    {text} </div>
+
+  
+                    '''
+                    st.markdown(bubble_html, unsafe_allow_html=True)
+                with cols[1]:
+                    st.markdown('<div class="chat-avatar">🤖</div>', unsafe_allow_html=True)
+
+    # Display unmasked chat history
+    for msg in st.session_state.ui_history:
+        _render_chat_row(msg.get("role", "assistant"), msg.get("parts", ""))
+
+    # Show processing indicator above chat input
+    if st.session_state.get("processing", False):
+        st.markdown("**✨ Thinking...**")
+    
     # Chat input
     if prompt := st.chat_input("Ask a question..."):
         # 1. Add user's unmasked message to UI history
         st.session_state.ui_history.append({"role": "user", "parts": prompt})
+        st.session_state["processing"] = True
+        st.rerun()
 
-        with st.spinner("Thinking..."):
+    # Process the last message if we're in processing state
+    if st.session_state.get("processing", False) and len(st.session_state.ui_history) > 0:
+        last_msg = st.session_state.ui_history[-1]
+        if last_msg["role"] == "user":
             # 2. Mask the user's prompt
             (
                 masked_prompt,
@@ -426,7 +510,7 @@ with tab_chat:
                 _,
                 updated_alias_map,
             ) = _run_masking(
-                text=prompt,
+                text=last_msg["parts"],
                 model_name=model_name,
                 threshold=threshold,
                 person_alias_map=st.session_state.person_alias_map,
@@ -434,7 +518,6 @@ with tab_chat:
             st.session_state.person_alias_map = updated_alias_map
             
             # 3. Update the session's unmasking map
-            # New mappings overwrite old ones if keys conflict
             inverted_mapping = _invert_mapping(mapping)
             print("Inverted mapping for this prompt:", inverted_mapping)
             st.session_state.chat_mapping.update(inverted_mapping)
@@ -455,13 +538,9 @@ with tab_chat:
             # 8. Add unmasked response to UI history
             st.session_state.ui_history.append({"role": "assistant", "parts": unmasked_response})
             
-            # Rerun to display the new messages
+            # Clear processing flag and rerun
+            st.session_state["processing"] = False
             st.rerun()
-
-    # Display unmasked chat history
-    for msg in st.session_state.ui_history:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["parts"])
             
 
 
