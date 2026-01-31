@@ -36,6 +36,7 @@ CANON_LABELS = {
     "SUPPORT_TICKET_NUMBER",
     "ACCOUNT_ID",
     "INTERNAL_ID",
+    "PASSWORD",
 }
 
 ALLOWED_CANON = set(CANON_LABELS)
@@ -111,6 +112,7 @@ GLINER_TO_CANON = {
     "customer_reference": "CUSTOMER_REFERENCE",
     "account_id": "ACCOUNT_ID",
     "internal_id": "INTERNAL_ID",
+    "password": "PASSWORD",
 }
 
 # Overlap resolution priority (higher wins). Kept identical to the notebook.
@@ -139,4 +141,5 @@ PRIORITY = {
     "DATE": 50,
     "PERSON": 40,
     "ORG": 35,
+    "PASSWORD": 30,
 }

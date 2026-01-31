@@ -52,6 +52,7 @@ _PERSON_ALIAS_STOPWORDS = {
     "user",
     "account",
     "support",
+    "My",
 }
 
 
@@ -59,8 +60,8 @@ _PERSON_TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z'\-]*")
 
 # GLiNER tends to under-detect standalone first/last names at higher thresholds.
 # We pull more candidates, then apply label-specific thresholds ourselves.
-_GLINER_CANDIDATE_THRESHOLD = 0.30
-_PERSON_RELAXED_THRESHOLD = 0.45
+_GLINER_CANDIDATE_THRESHOLD = 0.50
+_PERSON_RELAXED_THRESHOLD = 0.6
 
 
 def _looks_like_name_token(s: str) -> bool:
@@ -201,13 +202,14 @@ def _span_overlaps_any(start: int, end: int, spans: List[Dict[str, Any]]) -> boo
 def assign_tags_and_mask(
     text: str,
     spans: List[Dict[str, Any]],
-) -> Tuple[str, Dict[str, str], Dict[str, float], List[Dict[str, Any]]]:
+    person_alias_to_tag: Optional[Dict[str, str]] = None,
+) -> Tuple[str, Dict[str, str], Dict[str, float], List[Dict[str, Any]], Dict[str, str]]:
     """
     Input spans must already be overlap-resolved and filtered.
     Adds:
       span["tag"]
     Returns:
-      masked_text, mapping(tag->original), scores(tag->confidence), spans(with tag)
+      masked_text, mapping(tag->original), scores(tag->confidence), spans(with tag), updated_person_alias_map
     """
     counters = defaultdict(int)
     value_to_tag: Dict[Tuple[str, str], str] = {}  # (label, norm_value) -> tag
@@ -216,7 +218,8 @@ def assign_tags_and_mask(
 
     # PERSON aliasing: once we see a full name, map first/last tokens -> same tag.
     # This keeps context when later mentions are just "Hannah" or "Mercer".
-    person_alias_to_tag: Dict[str, str] = {}  # norm(token) -> existing tag
+    if person_alias_to_tag is None:
+        person_alias_to_tag = {}
 
     # assign tags
     for s in spans:
@@ -254,6 +257,8 @@ def assign_tags_and_mask(
 
         # After tagging a full PERSON name, register its first/last token as aliases.
         if label == "PERSON":
+            # Also register the full name itself as an alias
+            person_alias_to_tag.setdefault(normalise_for_key("PERSON", original), tag)
             for tok in _person_alias_tokens(original):
                 person_alias_to_tag.setdefault(normalise_for_key("PERSON", tok), tag)
 
@@ -289,7 +294,7 @@ def assign_tags_and_mask(
     for s in sorted(spans, key=lambda x: x["start"], reverse=True):
         masked_text = masked_text[: s["start"]] + s["tag"] + masked_text[s["end"] :]
 
-    return masked_text, mapping, scores, spans
+    return masked_text, mapping, scores, spans, person_alias_to_tag
 
 
 def resolve_overlaps_spans(spans: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -325,7 +330,8 @@ def mask_with_gliner(
     model_name_or_obj: Any,
     labels: Optional[List[str]] = None,
     threshold: float = 0.5,
-) -> Tuple[str, Dict[str, str], Dict[str, float], List[Dict[str, Any]]]:
+    person_alias_to_tag: Optional[Dict[str, str]] = None,
+) -> Tuple[str, Dict[str, str], Dict[str, float], List[Dict[str, Any]], Dict[str, str]]:
     """Mask entities in text using GLiNER and deterministic regex backstops.
 
     Supports:
@@ -370,6 +376,7 @@ def mask_with_gliner(
             "session_id",
             "customer_reference",
             "account_id",
+            "password"
         ]
 
     # Ask for more candidates, then filter per label.
@@ -424,4 +431,4 @@ def mask_with_gliner(
     spans = _merge_adjacent_person_spans(text, spans)
 
     spans = resolve_overlaps_spans(spans)
-    return assign_tags_and_mask(text, spans)
+    return assign_tags_and_mask(text, spans, person_alias_to_tag)
